@@ -1,0 +1,94 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #F5F5F5;
+    color: #333333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Terms Container */
+.terms-container {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+}
+
+/* Header */
+.terms-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.terms-header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #2C3E50;
+    margin-bottom: 10px;
+}
+
+.terms-header p {
+    font-size: 14px;
+    color: #666666;
+}
+
+/* Content */
+.terms-content {
+    max-height: 500px;
+    overflow-y: auto;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #444444;
+}
+
+.terms-content h2 {
+    font-size: 20px;
+    font-weight: 500;
+    color: #2C3E50;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.terms-content p {
+    margin-bottom: 15px;
+}
+
+.terms-content a.privacy-link {
+    color: #3498DB;
+    text-decoration: none;
+}
+
+.terms-content a.privacy-link:hover {
+    text-decoration: underline;
+}
+
+/* Back Button */
+.back-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 24px;
+    background-color: #3498DB;
+    color: #FFFFFF;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.back-btn:hover {
+    background-color: #2980B9;
+}

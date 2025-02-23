@@ -7,69 +7,54 @@
     <link rel="stylesheet" href="register.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100&family=Poppins:wght@300&family=Raleway:wght@100&display=swap" rel="stylesheet"></head>
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <script src="register.js"></script>
-
-    <section class="FirstSection">
-        <div class="registerSection">
-            <div class="container">
-            <div class="heading">Register </div>
-            <form action="register.php" method="POST" class="form" >
-
-            <label>
-                <span>First Name</span> <br>
-                <input type="text" name="firstName" id="firstName" placeholder="Enter your First Name" required> 
-            </label>
-
-            <label>
-                <span>Last Name</span> <br>
-                <input type="text" name="lastName" id="lastName" placeholder="Enter your Last Name" required>
-            </label>
-            
-            <label>
-                <span>Email</span> <br>
-                <input type="email" name="email" id="email" placeholder="Enter your Email" required>
-            </label>
-
-            <label>
-                <span>Phone no.</span> <br>
-                <input type="number" name="phoneNumber" id="phoneNumber" placeholder="Enter your Phone Number" required>
-            </label>
-
-            <label>
-                <span>Password</span> <br>
-                <input type="password" name="password" id="password" class="password" placeholder="Password should be Minimum 8 Characters" required>
-                <span id="passwordError" class="error"></span>
-            </label>
-            <label>
-
-            <div class="termsAndConditionDiv">
-
-            <label>
-                <input type="radio" name="termsAndCondition" id="termsAndCondition"> I agree all term and condtion
-            </label>
+    <section class="register-section">
+        <div class="register-container">
+            <div class="register-heading">
+                <h1>Create an Account</h1>
+                <p>Join us to manage your inventory efficiently.</p>
             </div>
-
-            <div class="submit_btn">
-                <button type="submit">
+            <form action="register.php" method="POST" id="register-form">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="firstName" id="firstName" placeholder="First Name" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="lastName" id="lastName" placeholder="Last Name" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" name="email" id="email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-phone"></i>
+                    <input type="tel" name="phoneNumber" id="phoneNumber" placeholder="Phone Number" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="password" id="password" placeholder="Password (Min 8 Characters)" required>
+                    <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+                </div>
+                <span id="passwordError" class="error"></span>
+                <div class="terms-and-conditions">
+                    <input type="checkbox" name="termsAndCondition" id="termsAndCondition" required>
+                    <label for="termsAndCondition">
+                        I agree to the <a href="terms.html" target="_blank">Terms and Conditions</a>.
+                    </label>
+                </div>
+                <button type="submit" class="submit-btn">
                     <span>Sign Up</span>
                 </button>
-            </div>    
-
             </form>
-
-            <p>Already have an Account <a href="http://localhost/Inventory%20Management%20System/login.html">Log in</a></p>    
-            
+            <div class="login-link">
+                Already have an account? <a href="http://localhost/Inventory%20Management%20System/login.html">Log in</a>
+            </div>
         </div>
-    </div>
-
     </section>
-
     <script src="register.js"></script>
-
-
 </body>
 </html>

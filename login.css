@@ -1,198 +1,146 @@
-*{
-    margin: 0px;
-    padding: 0px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-body{
+body {
   font-family: 'Poppins', sans-serif;
-}
-
-
-
-/* Login Section Code */
-
-.LoginSection{
+  background-color: #F5F5F5;
+  color: #333333;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-}
-
-.container{
-    border: 1px solid black;
-    border-radius: 20px;
-    padding: 50px; 
-    margin: 50px;
-}
-
-/* Login heading */
-.heading{
-    color: #101540;
-    font-weight: 600;
-    font-size: 30px;
-    text-align: center;
-    margin: 20px;
-}
-
-
-/* CSS For Google Button */
-
-.google_Button {
-    width: 100%;
-    display: flex;
-    padding: 0.5rem 1.4rem;
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-    font-weight: 700;
-    text-align: center;
-    text-transform: uppercase;
-    vertical-align: middle;
-    align-items: center;
-    border-radius: 1rem;
-    border: 1px solid rgba(0, 0, 0, 0.25);
-    gap: 0.75rem;
-    color: rgb(65, 63, 63);
-    background-color: #fff;
-    cursor: pointer;
-    transition: all .6s ease;
-  justify-content: center;
-  font-family: "Poppins", sans-serif;
-  overflow: hidden;
-
-  }
-
-  
-  .google_Button svg {
-    height: 24px;
-  }
-  
-  .google_Button:hover {
-    transform: scale(1.02);
-  }
-
-
-/* Input buttons */
-
-input[type="email"],
-input[type="password"]{
-    width: 98%;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    margin-bottom: 15px;
-    border: 1px solid black;
-    border-radius: 1px;
-    background-color: #c9c8c8;
-    color: black;
-    padding-left: 2%;
-}
-
-
-
-
-
-form p{
-  margin-top: 10px;
-}
-
-
-/* Remember me and forget password  */
-.flex-row {
-  display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 10px;
-  justify-content: space-between;
+  height: 100vh;
 }
 
-
-
-
-.flex-row  a {
-  text-decoration: none;
+.login-section {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
 }
 
-.span {
-  margin-left: 5px;
-  color: #2d79f3;
-  font-weight: 500;
+.login-container {
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.login-heading {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.login-heading h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #2C3E50; /* Dark blue for headings */
+}
+
+.login-heading p {
+  font-size: 14px;
+  color: #666666;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-group i:first-child { /* Lock icon */
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666666;
+}
+
+.input-group .toggle-password { /* Eye icon */
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666666;
+  cursor: pointer;
+  z-index: 2; /* Ensure it's above the input field */
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px 40px 10px 40px; /* Padding for both icons */
+  border: 1px solid #DDDDDD;
+  border-radius: 5px;
+  background-color: #F9F9F9;
+  color: #333333;
+  font-size: 14px;
+}
+
+.input-group input:focus {
+  border-color: #3498DB; /* Blue for focus state */
+  outline: none;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666666;
   cursor: pointer;
 }
 
-.forgetpass{
-  justify-content: space-around;
+.flex-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-
-
-/* Sign up button */
-.submit_btn{
-  margin: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.flex-row label {
+  font-size: 14px;
+  color: #666666;
 }
-.submit_btn > button {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 5px;
-  background: #183153;
-  font-family: "Poppins", sans-serif;
-  box-shadow: 0px 6px 24px 0px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  border: none;
- }
- 
- .submit_btn > button:after {
-  content: " ";
-  width: 0%;
-  height: 100%;
-  background: #FFD401;
-  position: absolute;
-  transition: all 0.4s ease-in-out;
-  right: 0;
- }
- 
- .submit_btn > button:hover::after {
-  right: auto;
-  left: 0;
-  width: 100%;
- }
- 
- .submit_btn > button span {
-  text-align: center;
+
+.forgot-password {
+  font-size: 14px;
+  color: #3498DB; /* Blue for links */
   text-decoration: none;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
+.submit-btn {
   width: 100%;
-  padding: 12px 16px;
-  color: #fff;
-  z-index: 20;
-  transition: all 0.3s ease-in-out;
- }
- 
- .submit_btn > button:hover span {
-  color: #183153;
-  animation: scaleUp 0.3s ease-in-out;
- }
- 
- @keyframes scaleUp {
-  0% {
-   transform: scale(1);
-  }
- 
-  50% {
-   transform: scale(0.95);
-  }
- 
-  100% {
-   transform: scale(1);
-  }
- }
- 
+  padding: 12px;
+  background-color: #3498DB; /* Blue for buttons */
+  border: none;
+  border-radius: 5px;
+  color: #FFFFFF;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 
+.submit-btn:hover {
+  background-color: #2980B9; /* Darker blue on hover */
+}
 
-.or{
+.register-link {
   text-align: center;
-  margin:20px
+  margin-top: 20px;
+  font-size: 14px;
+  color: #666666;
+}
 
+.register-link a {
+  color: #3498DB; /* Blue for links */
+  text-decoration: none;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
 }
