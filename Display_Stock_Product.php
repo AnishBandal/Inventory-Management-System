@@ -2,54 +2,66 @@
 session_start();
 
 echo '<style>
-@keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
-  
+
   @keyframes slideIn {
-    from {
-      transform: translateY(50px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
   }
-  
+
   table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
     animation: fadeIn 0.5s ease-in-out;
   }
-  
+
   table th,
   table td {
-    padding: 10px;
-    border: 1px solid #ccc;
+    padding: 12px;
+    border: 1px solid #DDDDDD;
+    text-align: left;
     animation: slideIn 0.3s ease-in-out;
   }
-  
+
   table th {
-    background-color: #333;
-    color: #fff;
-    font-weight: bold;
+    background-color: #2C3E50; /* Dark blue */
+    color: #FFFFFF;
+    font-weight: 600;
   }
-  
+
   table tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: #F9F9F9;
   }
-  
+
   table tr:hover {
-    background-color: #e5e5e5;
+    background-color: #F1F1F1;
   }
-  
+
+  .status-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+
+  .status-btn.pending {
+    background-color: #FFA500;
+    color: #FFFFFF;
+  }
+
+  .status-btn.completed {
+    background-color: #4CAF50;
+    color: #FFFFFF;
+    cursor: not-allowed;
+  }
+
   .no-records {
     text-align: center;
     font-style: italic;
@@ -57,8 +69,6 @@ echo '<style>
     margin-bottom: 20px;
     animation: fadeIn 0.5s ease-in-out;
   }
-     
-  
 </style>';
 
 // Retrieve the User_Id from the session

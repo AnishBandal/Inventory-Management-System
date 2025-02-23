@@ -8,8 +8,8 @@ $email = isset($_SESSION['Email']) ? $_SESSION['Email'] : '';
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sales Order - Inventory Management</title>
-  <link rel="stylesheet" href="products.css?v=1.0">
+  <title>Dashboard - Inventory Management</title>
+  <link rel="stylesheet" href="dashboard.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -22,10 +22,6 @@ $email = isset($_SESSION['Email']) ? $_SESSION['Email'] : '';
       <h1>Inventory Management</h1>
     </div>
     <div class="navbar-right">
-      <button class="dashboard-btn" onclick="location.href='dashboard.php'">
-        <i class="fas fa-home"></i>
-        <span>Dashboard</span>
-      </button>
       <div class="user-dropdown">
         <button class="user-btn">
           <i class="fas fa-user-circle"></i>
@@ -43,20 +39,24 @@ $email = isset($_SESSION['Email']) ? $_SESSION['Email'] : '';
 
   <!-- Main Content -->
   <div class="content">
-    <h2>Sales History</h2>
-    <button type="button" class="add-stock-btn" onclick="location.href = 'Remove_Stock.html'">
-      <span class="button__text">Add Stock</span>
-      <span class="button__icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="12" y1="5" x2="12" y2="19"></line>
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-      </span>
-    </button>
-
-    <!-- Product Table -->
-    <div class="products-table">
-      <iframe src="Display_Sales_Product.php" frameborder="0" width="100%" height="400"></iframe>
+    <h2>Dashboard</h2>
+    <div class="card-container">
+      <div class="card" onclick="location.href='purchase_order.php'">
+        <i class="fas fa-cart-plus"></i>
+        <h3>Purchase Order</h3>
+        <p>Manage your purchase orders.</p>
+      </div>
+      <div class="card" onclick="location.href='sales_order.php'">
+        <i class="fas fa-chart-line"></i>
+        <h3>Sales Order</h3>
+        <p>Track your sales orders.</p>
+      </div>
+      <div class="card" onclick="location.href='in_stock.php'">
+        <i class="fas fa-boxes"></i>
+        <h3>In Stock</h3>
+        <p>View your current inventory.</p>
+      </div>
+      <!-- Add more cards for future pages -->
     </div>
   </div>
 

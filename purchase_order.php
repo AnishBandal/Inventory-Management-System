@@ -1,78 +1,81 @@
 <?php
 session_start();
-
 $email = isset($_SESSION['Email']) ? $_SESSION['Email'] : '';
-
 ?>
 
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Purchase Order</title>
-  <link rel="stylesheet" href="purchase_order.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purchase Order - Inventory Management</title>
+  <link rel="stylesheet" href="products.css?v=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-  <div class="sidebar" id="sidebar">
-    <!-- Sidebar content here -->
-    <ul>
-      <li class="navMenu"><a href="http://localhost/Inventory%20Management%20System/purchase_order.php">Purchase Order</a></li>
-      <li class="navMenu"><a href="http://localhost/Inventory%20Management%20System/sales_order.php">Sales Order</a></li>
-      <li class="navMenu"><a href="http://localhost/Inventory%20Management%20System/in_stock.php">In Stock</a></li>
-    </ul>
-  </div>
-
+  <!-- Navbar -->
   <nav>
+    <div class="navbar-left">
+      <h1>Inventory Management</h1>
+    </div>
+    <div class="navbar-right">
+      <button class="dashboard-btn" onclick="location.href='dashboard.php'">
+        <i class="fas fa-home"></i>
+        <span>Dashboard</span>
+      </button>
+      <div class="user-dropdown">
+        <button class="user-btn">
+          <i class="fas fa-user-circle"></i>
+          <span><?php echo $email; ?></span>
+          <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="dropdown-content">
+          <a href="#"><i class="fas fa-user"></i> Profile</a>
+          <a href="#"><i class="fas fa-cog"></i> Settings</a>
+          <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
 
-  <div class="hamburger" onclick="toggleSidebar()">
-    <div class="hamburger-line"></div>
-    <div class="hamburger-line"></div>
-    <div class="hamburger-line"></div>
-  </div> 
-  
-  <p id="userName">Welcome User</p>
-
- </nav>
-
-  <div class="content" id="content">
-
+  <!-- Main Content -->
+  <div class="content">
     <h2>Purchase History</h2>
-    
-    <button type="button" class="button" onclick="location.href = 'Add_Stock.html'">
+    <button type="button" class="add-stock-btn" onclick="location.href = 'Add_Stock.html'">
       <span class="button__text">Add Stock</span>
-      <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24" fill="none" class="svg"><line y2="19" y1="5" x2="12" x1="12"></line><line y2="12" y1="12" x2="19" x1="5"></line></svg></span>
+      <span class="button__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </span>
     </button>
 
-    
-    <div class="products_table">
-    <iframe src="display_product.php" frameborder="0" width="100%" height="400"></iframe>
+    <!-- Product Table -->
+    <div class="products-table">
+      <iframe src="Display_Purchased_Product.php" frameborder="0" width="100%" height="400"></iframe>
     </div>
-
-
-
   </div>
-  
 
-  
   <script>
+    // Toggle dropdown menu
+    const userBtn = document.querySelector(".user-btn");
+    const dropdownContent = document.querySelector(".dropdown-content");
 
-    function toggleSidebar() {
-      var sidebar = document.getElementById("sidebar");
-      var content = document.getElementById("content");
-      sidebar.classList.toggle("open");
-      content.classList.toggle("open");
-    }
+    userBtn.addEventListener("click", function (event) {
+      event.stopPropagation(); // Prevent the click from bubbling up
+      dropdownContent.classList.toggle("show");
+    });
 
-
-    window.onload = function() {
-          // Retrieve the email from the session storage
-          var email = "<?php echo $email; ?>";
-
-          // Set the email to the HTML element
-          var displayElement = document.getElementById("userName");
-          displayElement.textContent = email;
-    };
-
+    // Close dropdown when clicking outside
+    window.addEventListener("click", function () {
+      if (dropdownContent.classList.contains("show")) {
+        dropdownContent.classList.remove("show");
+      }
+    });
   </script>
 </body>
 </html>

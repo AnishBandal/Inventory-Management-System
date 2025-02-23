@@ -76,7 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
        echo ' <script>
         alert("Data saved successfully");
-        window.location.href = "http://localhost/Inventory%20Management%20System/purchase_order.php";
+        window.location.href = "http://localhost/Inventory%20Management%20System/dashboard.php";
         </script>
         ';
         

@@ -42,7 +42,7 @@ if ($result->num_rows > 0) {
 
         echo '<script>alert("Login Successful!");</script>';
         // Redirect to the next page
-        echo '<script>window.location.href = "http://localhost/Inventory%20Management%20System/purchase_order.php";</script>';
+        echo '<script>window.location.href = "http://localhost/Inventory%20Management%20System/dashboard.php";</script>';
 
         exit;
     } else {
