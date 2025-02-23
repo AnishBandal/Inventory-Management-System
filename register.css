@@ -1,0 +1,153 @@
+    *{
+        margin: 0px;
+        padding: 0px;
+    }
+
+    body{
+    font-family: 'Poppins', sans-serif;
+    }
+
+
+
+    /* Login Section Code */
+
+    .registerSection{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    }
+
+    .container{
+        border: 1px solid black;
+        border-radius: 20px;
+        padding: 30px; 
+        margin: 50px;
+
+    }
+
+    /* Login heading */
+    .heading{
+        color: #101540;
+        font-weight: 600;
+        font-size: 30px;
+        text-align: center;
+        margin: 20px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        /* max-width: 350px; */
+        width: 350px;
+        height: max-content;
+        padding: 20px;
+        border-radius: 20px;
+        position: relative;
+    }
+
+
+
+    input[type="text"]{
+        width: 98%;
+        padding: 10px 0;
+        padding-left: 2%;
+        outline: 0;
+        border: 1px solid rgba(105, 105, 105, 0.397);
+        border-radius: 1px;
+        background-color: #b1b1b1;
+    }
+
+
+
+    input[type="email"], 
+    input[type="number"],
+    input[type="password"]
+    {
+    width: 98%;
+    padding: 10px 0;
+    padding-left: 2%;
+    outline: 0;
+    border: 1px solid rgba(105, 105, 105, 0.397);
+    border-radius: 1px;
+    background-color: #b1b1b1;
+    }
+
+    .termsAndConditionDiv{
+        display: flex;
+        flex-direction: row;
+    }
+    
+    input[type="radio"]{
+        padding: 0px;
+    }
+
+
+    /* Sign up button */
+    .submit_btn{
+    margin: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+    .submit_btn > button {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    background: #183153;
+    font-family: "Poppins", sans-serif;
+    box-shadow: 0px 6px 24px 0px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    border: none;
+    }
+    
+    .submit_btn > button:after {
+    content: " ";
+    width: 0%;
+    height: 100%;
+    background: #FFD401;
+    position: absolute;
+    transition: all 0.4s ease-in-out;
+    right: 0;
+    }
+    
+    .submit_btn > button:hover::after {
+    right: auto;
+    left: 0;
+    width: 100%;
+    }
+    
+    .submit_btn > button span {
+    text-align: center;
+    text-decoration: none;
+    width: 100%;
+    padding: 12px 16px;
+    color: #fff;
+    z-index: 20;
+    transition: all 0.3s ease-in-out;
+    }
+    
+    .submit_btn > button:hover span {
+    color: #183153;
+    animation: scaleUp 0.3s ease-in-out;
+    }
+    
+    @keyframes scaleUp {
+    0% {
+    transform: scale(1);
+    }
+    
+    50% {
+    transform: scale(0.95);
+    }
+    
+    100% {
+    transform: scale(1);
+    }
+    }
+    
+
+

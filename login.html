@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - IMS</title>
+    <link rel="stylesheet" href="login.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100&family=Poppins:wght@300&family=Raleway:wght@100&display=swap" rel="stylesheet">
+</head>
+<body>
+<section class="firstSection">
+    <div class="LoginSection">
+        <div class="container">
+            <div class="heading">
+                Login 
+            </div>
+    
+            <form action="login.php" method="post"   >
+                <p>
+                    Email*<br>
+                    <input type="email" name="email" id="email" placeholder="Enter your Email">
+                </p>
+                <p>
+                    Password* <br>
+                    <input type="password" name="password" id="password" placeholder="Minimum 8 Characters">
+                </p>
+                <div class="flex-row">
+                    <div>
+                        <input type="checkbox" id="remember">
+                        <label>Remember me </label>
+                    </div>
+                    <span class="span"><a href="#">Forgot password?</a></span>
+                </div>
+                
+                <div class="submit_btn">
+                    <button type="submit">
+                        <span>Submit</span>
+                    </button>
+                </div>        
+            </form>
+            
+            Not Registered Yet? <a href="http://localhost/Inventory%20Management%20System/register.html">Create a New Account</a><br>
+            
+        </div>
+    </div>
+</section>    
+<script>
+    function redirectToNextWebsite(event) {
+        event.preventDefault(); // Prevent form submission
+
+        var email = document.getElementById("email").value;
+        var redirectURL = "http://localhost/Inventory%20Management%20System/purchase_order.html?email=" + encodeURIComponent(email);
+        window.location.href = redirectURL;
+    }
+</script>
+</body>
+</html>
