@@ -72,6 +72,7 @@ echo '<style>
 </style>';
 
 // Retrieve the User_Id from the session
+
 $user_Id = $_SESSION['User_Id'] ?? null;
 
 if ($user_Id === null) {
@@ -79,64 +80,106 @@ if ($user_Id === null) {
 }
 
 // Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "inventory_management_system";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli("localhost", "root", "", "inventory_management_system");
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch purchase orders
-$sql = "SELECT Purchase_Order_Id, Product_Id, Product, Supplier, Order_Date, Quantity, Cost, Status FROM product_details WHERE User_Id = '$user_Id' AND Purchase_Order_Id != 0";
+// Updated query for new structure
+$sql = "SELECT 
+            po.PO_Id AS Purchase_Order_Id,
+            p.Product_Id,
+            p.Name AS Product,
+            s.Name AS Supplier,
+            poi.Quantity,
+            poi.Unit_Cost AS Cost,
+            (poi.Quantity * poi.Unit_Cost) AS Amount,
+            po.Order_Date,
+            po.Status,
+            po.Expected_Delivery,
+            po.Actual_Delivery
+        FROM purchase_orders po
+        JOIN purchase_order_items poi ON po.PO_Id = poi.PO_Id
+        JOIN products p ON poi.Product_Id = p.Product_Id
+        JOIN suppliers s ON po.Supplier_Id = s.Supplier_Id
+        WHERE po.User_Id = '$user_Id'";
+
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
     echo "<table>
             <tr>
-                <th>Purchase Order ID</th>
-                <th>Product ID</th>
-                <th>Product</th>
+                <th>Purchase Order ID</th> 
                 <th>Supplier</th>
+                <th>Product</th>
+                <th>Quantity</th>       
+                <th>Unit Cost</th>
+                <th>Total Cost</th>
                 <th>Order Date</th>
-                <th>Quantity</th>
-                <th>Cost</th>
+                <th>Expected Delivery</th>
                 <th>Status</th>
             </tr>";
 
-    while ($row = $result->fetch_assoc()) {
-        $statusClass = strtolower($row["Status"]) === "completed" ? "completed" : "pending";
-        echo "<tr>
-                <td>{$row["Purchase_Order_Id"]}</td>
-                <td>{$row["Product_Id"]}</td>
-                <td>{$row["Product"]}</td>
-                <td>{$row["Supplier"]}</td>
-                <td>{$row["Order_Date"]}</td>
-                <td>{$row["Quantity"]}</td>
-                <td>{$row["Cost"]}</td>
-                <td><button class='status-btn $statusClass' onclick='updateStatus({$row["Purchase_Order_Id"]})'>{$row["Status"]}</button></td>
-              </tr>";
+            while ($row = $result->fetch_assoc()) {
+              $statusClass = strtolower($row["Status"]) === "received" ? "completed" : "pending";
+              
+              // Handle delivery date display
+              $deliveryDate = '';
+              if ($row["Status"] === "Received" && isset($row["Actual_Delivery"])) {
+                  $deliveryDate = "Delivered: ".$row["Actual_Delivery"];
+              } else if (isset($row["Expected_Delivery"])) {
+                  $deliveryDate = "Expected: ".$row["Expected_Delivery"];
+              } else {
+                  $deliveryDate = "Not specified";
+              }
+              
+              echo "<tr>
+                      <td>{$row["Purchase_Order_Id"]}</td>
+                      <td>{$row["Supplier"]}</td>
+                      <td>{$row["Product"]}</td>
+                      <td>{$row["Quantity"]}</td>
+                      <td>{$row["Cost"]}</td>
+                      <td>{$row["Amount"]}</td>
+                      <td>{$row["Order_Date"]}</td>
+                      <td>{$deliveryDate}</td>
+                      <td><button class='status-btn $statusClass' data-purchase-id='{$row["Purchase_Order_Id"]}' onclick='updateStatus(this)'>{$row["Status"]}</button></td>
+                    </tr>";
     }
-
     echo "</table>";
 } else {
-    echo "<p class='no-records'>No records found.</p>";
+    echo "<p class='no-records'>No purchase orders found.</p>";
 }
 
 $conn->close();
 
 echo '<script>
-  function updateStatus(purchaseOrderId) {
-    const button = document.getElementById(`status_btn_${purchaseOrderId}`);
-    if (button.textContent === "Pending") {
+function updateStatus(button) {
+  const purchaseOrderId = button.dataset.purchaseId;
+
+  fetch("update_status.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ 
+      orderId: purchaseOrderId,
+      orderType: "purchase"
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === "success") {
       button.textContent = "Completed";
       button.classList.remove("pending");
       button.classList.add("completed");
       button.disabled = true;
+    } else {
+      alert("Error updating status: " + data.message);
     }
-  }
+  })
+  .catch(error => {
+    console.error("Error:", error);
+  });
+}
+
 </script>';
 ?>

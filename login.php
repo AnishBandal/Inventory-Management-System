@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Database configuration and connection
+// Database configuration
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -9,47 +9,43 @@ $dbname = "inventory_management_system";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Function to securely hash the password using bcrypt
-function hashPassword($password)
-{
-    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-    return $hashedPassword;
+    die(json_encode(['status' => 'error', 'message' => 'Database connection failed']));
 }
 
 // Retrieve the entered email and password
-$email = $_POST['email'];
-$password = $_POST['password'];
+$email = $_POST['email'] ?? '';
+$password = $_POST['password'] ?? '';
 
 // Prepare and bind the SQL statement
-$stmt = $conn->prepare("SELECT password, User_Id FROM registration_details WHERE email = ?");
+$stmt = $conn->prepare("SELECT User_Id, Password, Role, Status FROM users WHERE Email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
-    $hashedPass = $row['password'];
-    $User_Id = $row['User_Id'];
-
-    if (password_verify($password, $hashedPass)) {
-        $_SESSION['User_Id'] = $User_Id; // Store the User_Id in a session variable
+    
+    if (password_verify($password, $row['Password'])) {
+        if ($row['Status'] === 'Suspended') {
+            echo json_encode(['status' => 'error', 'message' => 'Your account is suspended']);
+            exit;
+        }
+        
+        // Set session variables
+        $_SESSION['User_Id'] = $row['User_Id'];
         $_SESSION['Email'] = $email;
-
-        echo '<script>alert("Login Successful!");</script>';
-        // Redirect to the next page
-        echo '<script>window.location.href = "http://localhost/Inventory%20Management%20System/dashboard.php";</script>';
-
-        exit;
+        $_SESSION['Role'] = $row['Role'];
+        
+        echo json_encode([
+            'status' => 'success',
+            'redirect' => 'dashboard.php'
+        ]);
     } else {
-        echo '<script>alert("Login Failure!");</script>';
+        echo json_encode(['status' => 'error', 'message' => 'Invalid credentials']);
     }
 } else {
-    echo '<script>alert("Login Failure!");</script>';
+    echo json_encode(['status' => 'error', 'message' => 'User not found']);
 }
 
 $stmt->close();

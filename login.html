@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login - IMS</title>
-    <link rel="stylesheet" href="login.css" />
+    <link rel="stylesheet" href="login.css?v=2.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -23,7 +23,7 @@
           <h1>Welcome Back</h1>
           <p>Login to manage your inventory.</p>
         </div>
-        <form action="login.php" method="post" id="login-form">
+        <form id="login-form">
           <div class="input-group">
             <i class="fas fa-envelope"></i>
             <input
@@ -38,9 +38,9 @@
             <i class="fas fa-lock"></i>
             <input type="password" name="password" id="password" placeholder="Password (Min 8 Characters)" required>
             <i class="fas fa-eye toggle-password" id="togglePassword"></i>
-        </div>
+          </div>
         
-        <div class="flex-row">
+          <div class="flex-row">
             <label> <input type="checkbox" id="remember" /> Remember me </label>
             <a href="#" class="forgot-password">Forgot password?</a>
           </div>
@@ -50,69 +50,122 @@
         </form>
         <div class="register-link">
           Not registered yet?
-          <a
-            href="/Inventory%20Management%20System/register.html"
-            >Create an account</a
-          >
+          <a href="/Inventory%20Management%20System/register.html">Create an account</a>
         </div>
       </div>
     </section>
+    
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        let rememberedEmail = localStorage.getItem("email");
+          // Load remembered email if exists
+          const rememberedEmail = localStorage.getItem("email");
+          if (rememberedEmail) {
+              document.getElementById("email").value = rememberedEmail;
+              document.getElementById("remember").checked = true;
+          }
 
-        if (rememberedEmail && rememberedPassword) {
-          document.getElementById("email").value = rememberedEmail;
-          document.getElementById("remember").checked = true; // Keep checkbox checked
-        }
-      });
+          // Password toggle
+          document.getElementById("togglePassword").addEventListener("click", function (event) {
+              event.stopPropagation();
+              const passwordInput = document.getElementById("password");
+              const toggleIcon = document.getElementById("togglePassword");
+              if (passwordInput.type === "password") {
+                  passwordInput.type = "text";
+                  toggleIcon.classList.replace("fa-eye", "fa-eye-slash");
+              } else {
+                  passwordInput.type = "password";
+                  toggleIcon.classList.replace("fa-eye-slash", "fa-eye");
+              }
+          });
 
-      document.getElementById("togglePassword").addEventListener("click", function (event) {
-            event.stopPropagation(); // Prevent the input field from gaining focus
-            const passwordInput = document.getElementById("password");
-            const toggleIcon = document.getElementById("togglePassword");
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                toggleIcon.classList.replace("fa-eye", "fa-eye-slash");
-            } else {
-                passwordInput.type = "password";
-                toggleIcon.classList.replace("fa-eye-slash", "fa-eye");
-            }
-        });
-
-      document.getElementById("login-form").addEventListener("submit", (e) => {
-        let email = document.getElementById("email").value.trim();
-        let password = document.getElementById("password").value.trim();
-        let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // Regex for email validation
-
-        if (email == "" || password == "") {
-          alert("All fields are Empty!");
-          e.preventDefault();
-          return;
-        }
-
-        if (!emailRegex.test(email)) {
-          alert("Please enter a valid email Address!");
-          e.preventDefault();
-          return;
-        }
-
-        if (password.length < 6) {
-          alert("Password must be at least 6 characters long!");
-          event.preventDefault();
-          return;
-        }
-
-        let rememberMe = document.getElementById("remember").checked;
-
-        if (rememberMe.checked) {
-          let email = document.getElementById("email").value;
-          localStorage.setItem("email", email);
-        } else {
-          localStorage.removeItem("email");
-        }
-
-        document.querySelector(".submit-btn").disabled = true;
+          // Form submission with AJAX
+          document.getElementById("login-form").addEventListener("submit", async (e) => {
+              e.preventDefault();
+              
+              const submitBtn = e.target.querySelector('button[type="submit"]');
+              submitBtn.disabled = true;
+              submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+              
+              // Get form values
+              const email = document.getElementById("email").value.trim();
+              const password = document.getElementById("password").value.trim();
+              const rememberMe = document.getElementById("remember").checked;
+              
+              // Client-side validation
+              if (!email || !password) {
+                  showAlert("Please fill out all fields", "error");
+                  submitBtn.disabled = false;
+                  submitBtn.innerHTML = 'Login';
+                  return;
+              }
+              
+              if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+                  showAlert("Please enter a valid email address", "error");
+                  submitBtn.disabled = false;
+                  submitBtn.innerHTML = 'Login';
+                  return;
+              }
+              
+              if (password.length < 8) {
+                  showAlert("Password must be at least 8 characters", "error");
+                  submitBtn.disabled = false;
+                  submitBtn.innerHTML = 'Login';
+                  return;
+              }
+              
+              // Store email if remember me is checked
+              if (rememberMe) {
+                  localStorage.setItem("email", email);
+              } else {
+                  localStorage.removeItem("email");
+              }
+              
+              // Prepare form data
+              const formData = new FormData();
+              formData.append('email', email);
+              formData.append('password', password);
+              
+              try {
+                  const response = await fetch('login.php', {
+                      method: 'POST',
+                      body: formData
+                  });
+                  
+                  const data = await response.json();
+                  
+                  if (data.status === 'success') {
+                      showAlert("Login successful! Redirecting...", "success");
+                      setTimeout(() => {
+                          window.location.href = data.redirect;
+                      }, 1500);
+                  } else {
+                      showAlert(data.message || "Login failed", "error");
+                  }
+              } catch (error) {
+                  showAlert("Network error occurred", "error");
+                  console.error('Error:', error);
+              } finally {
+                  submitBtn.disabled = false;
+                  submitBtn.innerHTML = 'Login';
+              }
+          });
+          
+          // Helper function to show alerts
+          function showAlert(message, type) {
+              // Remove existing alerts
+              const existingAlerts = document.querySelectorAll('.alert');
+              existingAlerts.forEach(alert => alert.remove());
+              
+              const alertBox = document.createElement('div');
+              alertBox.className = `alert ${type}`;
+              alertBox.textContent = message;
+              document.querySelector('.login-container').prepend(alertBox);
+              
+              setTimeout(() => {
+                  alertBox.classList.add('fade-out');
+                  setTimeout(() => alertBox.remove(), 500);
+              }, 3000);
+          }
       });
     </script>
   </body>

@@ -71,10 +71,10 @@ echo '<style>
   }
 </style>';
 
+
 // Retrieve the User_Id from the session
 $user_Id = $_SESSION['User_Id'] ?? null;
 
-// Check if User_Id is available
 if ($user_Id === null) {
     die("User ID not found in the session.");
 }
@@ -87,24 +87,21 @@ $dbname = "inventory_management_system";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Prepare the SQL statement to get in-stock quantity
-$sql = "SELECT Product_Id, Product, 
-               SUM(CASE WHEN Sales_Order_Id = 0 THEN Quantity ELSE -Quantity END) AS InStock_Quantity
-        FROM product_details
-        WHERE User_Id = '$user_Id'
-        GROUP BY Product_Id";
+// Updated query for new structure
+$sql = "SELECT 
+            p.Product_Id, 
+            p.Name AS Product,
+            p.Current_Stock AS InStock_Quantity
+        FROM products p
+        WHERE p.Current_Stock > 0";
 
-// Execute the SQL statement
 $result = $conn->query($sql);
 
-// Check if any records were found
 if ($result->num_rows > 0) {
-    // Display the records in a table
     echo "<table>
             <tr>
                 <th>Product ID</th>
@@ -112,20 +109,17 @@ if ($result->num_rows > 0) {
                 <th>In-Stock Quantity</th>
             </tr>";
 
-            while ($row = $result->fetch_assoc()) {
-              echo "<tr>
-                      <td>".$row["Product_Id"]."</td>
-                      <td>".$row["Product"]."</td>
-                      <td>".$row["InStock_Quantity"]."</td>
-                    </tr>";
-          }
-          
-
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>
+                <td>".$row["Product_Id"]."</td>
+                <td>".$row["Product"]."</td>
+                <td>".$row["InStock_Quantity"]."</td>
+              </tr>";
+    }
     echo "</table>";
 } else {
-    echo "No records found.";
+    echo "<p class='no-records'>No products in stock.</p>";
 }
 
-// Close the database connection
 $conn->close();
 ?>

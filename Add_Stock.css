@@ -1,20 +1,53 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
 body {
-    font-family: Arial, sans-serif;
+    background-color: #F5F5F5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
 }
 
-.heading{
-    text-align: center;
-}
+/* Form Container */
 .form-container {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
     max-width: 500px;
-    margin: 0 auto;
+    width: 100%;
+    animation: fadeIn 0.5s ease-in-out;
 }
 
+/* .heading {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.heading h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #2C3E50;
+}
+
+.heading p {
+    font-size: 14px;
+    color: #666666;
+} */
+
+/* Form Group */
 .form-group {
     margin-bottom: 20px;
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .form-group.active {
@@ -24,58 +57,135 @@ body {
 
 .form-group label {
     display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2C3E50;
+    margin-bottom: 8px;
 }
 
 .form-group input[type="text"],
 .form-group input[type="number"],
-.form-group textarea {
+.form-group input[type="date"] {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid #DDDDDD;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s ease;
 }
 
-.form-group textarea {
-    resize: vertical;
-    height: 80px;
+.form-group input[type="text"]:focus,
+.form-group input[type="number"]:focus,
+.form-group input[type="date"]:focus {
+    border-color: #3498DB;
 }
 
-.form-group input[type="submit"] {
-    background-color: #5C469C;
-    color: white;
-    border: none;
-    padding: 10px 20px;
+/* Radio Group */
+.radio-group {
+    display: flex;
+    gap: 20px;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #2C3E50;
     cursor: pointer;
-    font-size: 16px;
-    border-radius: 4px;
+}
+
+.radio-group input[type="radio"] {
+    accent-color: #3498DB;
+}
+
+/* Heading */
+.heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.heading-content {
+    flex: 1;
+}
+
+.heading h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #2C3E50;
+    margin-bottom: 8px;
+}
+
+.heading p {
+    font-size: 14px;
+    color: #666666;
+}
+
+/* Back Button */
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background-color: #3498DB;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.submit_btn{
+.back-btn:hover {
+    background-color: #2980B9;
+}
+
+.back-btn i {
+    font-size: 14px;
+}
+
+/* Submit Button */
+.submit_btn {
     text-align: center;
+    margin-top: 20px;
 }
 
-.form-group input[type="submit"]:hover {
-    background-color: #1D267D;
+.submit_btn button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background-color: #3498DB;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-/* Animation Keyframes */
+.submit_btn button:hover {
+    background-color: #2980B9;
+}
+
+.submit_btn button i {
+    font-size: 16px;
+}
+
+/* Animations */
 @keyframes fadeIn {
-    0% {
+    from {
         opacity: 0;
         transform: translateY(20px);
     }
-    100% {
+    to {
         opacity: 1;
         transform: translateY(0);
     }
 }
-
-/* Apply animation to form groups */
-.form-container .form-group {
-    animation: fadeIn 0.6s forwards;
-}
-
