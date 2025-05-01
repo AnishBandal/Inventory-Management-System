@@ -1,6 +1,6 @@
 <?php
-
 session_start();
+
 // Database configuration
 $servername = "localhost";
 $username = "root";
@@ -12,29 +12,30 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);  //Use this if you want to see PHP errors
+    die("Connection failed: " . $conn->connect_error);
 }
 
 // Function to securely hash the password using bcrypt
 function hashPassword($password) {
-    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-    return $hashedPassword;
+    return password_hash($password, PASSWORD_BCRYPT);
 }
 
-// Retrieve the previous ID
-$sql = "SELECT MAX(User_Id) AS max_id FROM registration_details";
-$result = $conn->query($sql);
+// Retrieve form data and sanitize
+$firstname = htmlspecialchars(trim($_POST["firstName"]));
+$lastname = htmlspecialchars(trim($_POST["lastName"]));
+$email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);
+$phoneno = htmlspecialchars(trim($_POST["phoneNumber"]));
+$password = $_POST["password"];
+$created_At = date('Y-m-d H:i:s');
 
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $previousId = $row["max_id"];
-    $newId = $previousId + 1;
+// Validate Email
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    echo '<script>alert("Invalid Email Format!"); window.history.back();</script>';
+    exit;
 }
 
-$email = $_POST['email']; // Assuming you retrieve the email from a form
-
-// Query to check if email exists
-$query = "SELECT COUNT(*) FROM registration_details WHERE email = ?";
+// Check if email already exists
+$query = "SELECT COUNT(*) FROM users WHERE email = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("s", $email);
 $stmt->execute();
@@ -43,48 +44,31 @@ $stmt->fetch();
 $stmt->close();
 
 if ($count > 0) {
-    // Email exists in the database, show alert message
-    echo '<script>alert("Email already exists in the database!");</script>';
-    echo '<script>window.history.back();</script>'; // Go back to the form
+    echo '<script>alert("Email already exists in the database!"); window.history.back();</script>';
     exit;
 }
 
-
-
-// Check if the form is submitted
+// If form submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $Id = $newId;
-    $firstname = $_POST["firstName"];
-    $lastname = $_POST["lastName"];
-    $email = $_POST["email"];
-    $phoneno = $_POST["phoneNumber"];
-    $password = $_POST["password"];
-
-
-    // Hash the password
     $hashedPassword = hashPassword($password);
 
-    // Prepare and bind the SQL statement
-    $stmt = $conn->prepare("INSERT INTO registration_details(User_Id, FirstName, LastName, Email, Phone_No, Password) VALUES(?,?, ?, ?, ?, ?)");
-    $stmt->bind_param('isssss',$Id, $firstname, $lastname, $email, $phoneno, $hashedPassword);
+    // Prepare and bind
+    $stmt = $conn->prepare("INSERT INTO users (FirstName, LastName, Email, Phone_No, Password, Created_At) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param('ssssss', $firstname, $lastname, $email, $phoneno, $hashedPassword, $created_At);
 
-    // Execute the statement
     if ($stmt->execute()) {
-        
+        $Id = $conn->insert_id; 
         $_SESSION['User_Id'] = $Id;
         $_SESSION['Email'] = $email;
 
-       echo ' <script>
-        alert("Data saved successfully");
-        window.location.href = "http://localhost/Inventory%20Management%20System/dashboard.php";
-        </script>
-        ';
-        
+        echo '<script>
+            alert("Data saved successfully");
+            window.location.href = "http://localhost/Inventory%20Management%20System/dashboard.php";
+        </script>';
     } else {
         echo "Error: " . $stmt->error;
     }
 
-    // Close the statement and connection
     $stmt->close();
     $conn->close();
 }

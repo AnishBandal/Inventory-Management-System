@@ -9,7 +9,7 @@ $email = isset($_SESSION['Email']) ? $_SESSION['Email'] : '';
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Purchase Order - Inventory Management</title>
-  <link rel="stylesheet" href="products.css?v=1.0">
+  <link rel="stylesheet" href="styles/products.css?v=1.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -54,6 +54,9 @@ $email = isset($_SESSION['Email']) ? $_SESSION['Email'] : '';
       </span>
     </button>
 
+    <!-- Feature to implement  -->
+    <input type="search" name="searchPurchaseOrders" id="searchOrder" class="searchOrder">
+
     <!-- Product Table -->
     <div class="products-table">
       <iframe src="Display_Purchased_Product.php" frameborder="0" width="100%" height="400"></iframe>
@@ -63,6 +66,7 @@ $email = isset($_SESSION['Email']) ? $_SESSION['Email'] : '';
   <script>
     // Toggle dropdown menu
     const userBtn = document.querySelector(".user-btn");
+    const search = document.querySelector("")
     const dropdownContent = document.querySelector(".dropdown-content");
 
     userBtn.addEventListener("click", function (event) {

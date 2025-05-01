@@ -2,48 +2,427 @@
 <html>
 <head>
     <title>Order Form</title>
-    <link rel="stylesheet" href="Add_Stock.css">
-    </head>
+    <link rel="stylesheet" href="styles/Add_Order.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
 <body>
-    <div class="form-container">
-        <div class="heading">
-        <h2>Order Form</h2>
-        </div>
-        <form action="Add_Stock.php" method="POST">
-            <div class="form-group">
-                <label for="product">Product:</label>
-                <input type="text" id="product" name="product" required>
+    <div class="order-form-container">
+        <a href="Purchase_Orders.php" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to Orders
+        </a>
+        
+        <div class="form-card">
+            <div class="form-header">
+                <h2><i class="fas fa-clipboard-list"></i> New Inventory Order</h2>
+                <p>Fill in the details to place a new order</p>
             </div>
-            <div class="form-group">
-                <label for="supplier">Supplier:</label>
-                <input type="text" id="supplier" name="supplier" required>
-            </div>
-            <div class="form-group">
-                <label for="order_date">Order Date:</label>
-                <input type="date" id="order_date" name="order_date" required>
-            </div>
-            <div class="form-group">
-                <label for="quantity">Quantity:</label>
-                <input type="number" id="quantity" name="quantity" required>
-            </div>
-            <div class="form-group">
-                <label for="cost">Cost:</label>
-                <input type="number" id="cost" name="cost" required>
-            </div>
-            <div class="form-group">
-                <label for="status">Status:</label>
-                <input type="radio" id="pending" name="status" value="Pending" required>
-                <label for="pending">Pending</label>
-                <input type="radio" id="completed" name="status" value="Completed" required>
-                <label for="completed">Completed</label>
+            `
+            <form id="orderForm" action="Add_Stock.php" method="POST" autocomplete="off">
+                <!-- PRODUCT SEARCH -->
+                <div class="form-group">
+                    <label for="product_search">
+                        <i class="fas fa-box-open"></i> Product Name
+                    </label>
+                    <div class="search-container">
+                        <input type="text" 
+                               id="product_search" 
+                               name="product_search" 
+                               placeholder="Start typing to search products..."
+                               autocomplete="off">
+                        <input type="hidden" id="product_id" name="product_id">
+                        <div id="product_suggestions" class="suggestions-dropdown"></div>
+                    </div>
+                </div>
 
-            </div>
-            <div class="submit_btn">
-            <div class="form-group">
-                <input type="submit" value="Submit">
-            </div>
-            </div>
-        </form>
+                <!-- DESCRIPTION -->
+                <div class="form-group">
+                    <label for="description">
+                        <i class="fas fa-align-left"></i> Description
+                    </label>
+                    <textarea id="description" name="description" rows="4" placeholder="Product description..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <!-- SUPPLIER -->
+                    <div class="form-group">
+                        <label for="supplier">
+                            <i class="fas fa-truck"></i> Supplier
+                        </label>
+                        <div class="search-container">
+                            <input type="text" 
+                                   id="supplier" 
+                                   name="supplier" 
+                                   placeholder="Start typing to search suppliers..."
+                                   autocomplete="off">
+                            <div id="supplier_suggestions" class="suggestions-dropdown"></div>
+                        </div>
+                    </div>
+
+                    <!-- ORDER DATE -->
+                    <div class="form-group">
+                        <label for="order_date">
+                            <i class="fas fa-calendar-day"></i> Order Date
+                        </label>
+                        <input type="date" id="order_date" name="order_date" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <!-- QUANTITY -->
+                    <div class="form-group">
+                        <label for="quantity">
+                            <i class="fas fa-cubes"></i> Quantity
+                        </label>
+                        <input type="number" id="quantity" name="quantity" min="1" placeholder="0" required>
+                    </div>
+
+                    <!-- COST -->
+                    <div class="form-group">
+                        <label for="cost">
+                            <i class="fas fa-dollar-sign"></i> Unit Cost
+                        </label>
+                        <input type="number" id="cost" name="cost" step="0.01" min="0" placeholder="0.00" required>
+                    </div>
+                </div>
+
+                <!-- STATUS -->
+                <div class="form-group status-group">
+                    <label><i class="fas fa-tasks"></i> Order Status</label>
+                    <div class="radio-container">
+                        <label class="radio-option pending">
+                            <input type="radio" name="status" value="Pending" checked>
+                            <span class="radio-custom"></span>
+                            <span class="radio-label">Pending</span>
+                        </label>
+                        <label class="radio-option completed">
+                            <input type="radio" name="status" value="Completed">
+                            <span class="radio-custom"></span>
+                            <span class="radio-label">Completed</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- SUBMIT -->
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Place Order
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Back button functionality
+        document.querySelector('.back-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = this.getAttribute('href');
+        });
+
+            // Set default order date to today's date
+    const orderDateInput = document.getElementById('order_date');
+    const currentDate = new Date().toISOString().split('T')[0]; // Get the current date in YYYY-MM-DD format
+    orderDateInput.value = currentDate;
+
+        // Product Search Autocomplete
+        const productSearch = document.getElementById('product_search');
+        const productSuggestions = document.getElementById('product_suggestions');
+        const productIdField = document.getElementById('product_id');
+        const descriptionField = document.getElementById('description');
+        
+        // Supplier Search Autocomplete
+        const supplierInput = document.getElementById('supplier');
+        const supplierSuggestions = document.getElementById('supplier_suggestions');
+        
+        let products = [];
+        let suppliers = [];
+        let selectedIndex = -1;
+        let activeDropdown = null;
+
+        function debounce(fn, delay = 300) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => fn.apply(this, args), delay);
+            };
+        }
+
+        // Product Search Functions
+        function fetchProducts(query) {
+            if (!query) {
+                productSuggestions.style.display = 'none';
+                return;
+            }
+            
+            fetch(`search_products.php?query=${encodeURIComponent(query)}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(data => {
+                    products = data;
+                    renderProductSuggestions();
+                })
+                .catch(error => {
+                    console.error('Error fetching products:', error);
+                    productSuggestions.style.display = 'none';
+                });
+        }
+
+        function renderProductSuggestions() {
+            productSuggestions.innerHTML = '';
+            
+            if (products.length === 0) {
+                productSuggestions.style.display = 'none';
+                return;
+            }
+            
+            products.forEach((product, index) => {
+                const item = document.createElement('div');
+                item.className = 'suggestion-item';
+                item.innerHTML = `
+                    <div class="suggestion-main">
+                        <span class="suggestion-name">${product.Product_Name}</span>
+                    </div>
+                    ${product.Description ? `<div class="suggestion-desc">${product.Description}</div>` : ''}
+                `;
+                
+                item.addEventListener('click', () => selectProduct(index));
+                productSuggestions.appendChild(item);
+            });
+            
+            productSuggestions.style.display = 'block';
+            activeDropdown = productSuggestions;
+            selectedIndex = -1;
+        }
+
+        function selectProduct(index) {
+            const product = products[index];
+            productSearch.value = product.Product_Name;
+            productIdField.value = product.Product_Id;
+            descriptionField.value = product.Description || '';
+            productSuggestions.style.display = 'none';
+            activeDropdown = null;
+        }
+
+        // Supplier Search Functions
+        function fetchSuppliers(query) {
+            if (!query) {
+                supplierSuggestions.style.display = 'none';
+                return;
+            }
+            
+            fetch(`search_suppliers.php?query=${encodeURIComponent(query)}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(data => {
+                    suppliers = data;
+                    renderSupplierSuggestions();
+                })
+                .catch(error => {
+                    console.error('Error fetching suppliers:', error);
+                    supplierSuggestions.style.display = 'none';
+                });
+        }
+
+        function renderSupplierSuggestions() {
+            supplierSuggestions.innerHTML = '';
+            
+            if (suppliers.length === 0) {
+                supplierSuggestions.style.display = 'none';
+                return;
+            }
+            
+            suppliers.forEach((supplier, index) => {
+                const item = document.createElement('div');
+                item.className = 'suggestion-item';
+                item.innerHTML = `
+                    <div class="suggestion-main">
+                        <span class="suggestion-name">${supplier.Supplier_Name}</span>
+                    </div>
+                    ${supplier.Contact_Info ? `<div class="suggestion-desc">${supplier.Contact_Info}</div>` : ''}
+                `;
+                
+                item.addEventListener('click', () => selectSupplier(index));
+                supplierSuggestions.appendChild(item);
+            });
+            
+            supplierSuggestions.style.display = 'block';
+            activeDropdown = supplierSuggestions;
+            selectedIndex = -1;
+        }
+
+        function selectSupplier(index) {
+            const supplier = suppliers[index];
+            supplierInput.value = supplier.Supplier_Name;
+            supplierSuggestions.style.display = 'none';
+            activeDropdown = null;
+        }
+
+        // Event listeners for product search
+        productSearch.addEventListener('input', debounce(function(e) {
+            fetchProducts(e.target.value.trim());
+        }));
+
+        productSearch.addEventListener('focus', function() {
+            if (products.length > 0) {
+                productSuggestions.style.display = 'block';
+                activeDropdown = productSuggestions;
+            }
+        });
+
+        // Event listeners for supplier search
+        supplierInput.addEventListener('input', debounce(function(e) {
+            fetchSuppliers(e.target.value.trim());
+        }));
+
+        supplierInput.addEventListener('focus', function() {
+            if (suppliers.length > 0) {
+                supplierSuggestions.style.display = 'block';
+                activeDropdown = supplierSuggestions;
+            }
+        });
+
+        // Common event listeners
+        document.addEventListener('click', function(e) {
+            if (!productSearch.contains(e.target) && !productSuggestions.contains(e.target) &&
+                !supplierInput.contains(e.target) && !supplierSuggestions.contains(e.target)) {
+                productSuggestions.style.display = 'none';
+                supplierSuggestions.style.display = 'none';
+                activeDropdown = null;
+            }
+        });
+
+        // Keyboard navigation
+        function setupKeyboardNavigation(inputElement) {
+            inputElement.addEventListener('keydown', function(e) {
+                if (!activeDropdown) return;
+                
+                const items = activeDropdown.querySelectorAll('.suggestion-item');
+                
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    selectedIndex = (selectedIndex < items.length - 1) ? selectedIndex + 1 : 0;
+                    highlightItem();
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    selectedIndex = (selectedIndex > 0) ? selectedIndex - 1 : items.length - 1;
+                    highlightItem();
+                } else if (e.key === 'Enter' && selectedIndex >= 0) {
+                    e.preventDefault();
+                    if (activeDropdown === productSuggestions) {
+                        selectProduct(selectedIndex);
+                    } else if (activeDropdown === supplierSuggestions) {
+                        selectSupplier(selectedIndex);
+                    }
+                }
+            });
+        }
+
+        function highlightItem() {
+            if (!activeDropdown) return;
+            
+            const items = activeDropdown.querySelectorAll('.suggestion-item');
+            items.forEach((item, index) => {
+                item.classList.toggle('highlighted', index === selectedIndex);
+            });
+            
+            if (selectedIndex >= 0) {
+                items[selectedIndex].scrollIntoView({
+                    block: 'nearest',
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        setupKeyboardNavigation(productSearch);
+        setupKeyboardNavigation(supplierInput);
+    });
+
+    // Form submission handler
+document.getElementById('orderForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Validate form
+    if (!validateForm()) return;
+    
+    // Submit form via AJAX
+    const formData = new FormData(this);
+    
+    fetch('Add_Stock.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.text();
+    })
+    .then(data => {
+        if (data.includes('success')) {
+            window.location.href = 'Purchase_Orders.php?success=1';
+        } else {
+            showError(data);
+        }
+    })
+    .catch(error => {
+        showError(error.message);
+    });
+});
+
+function validateForm() {
+    // Basic validation
+    const requiredFields = [
+        'product_search', 'supplier', 'order_date', 
+        'quantity', 'cost', 'status'
+    ];
+    
+    let isValid = true;
+    
+    requiredFields.forEach(field => {
+        const element = document.querySelector(`[name="${field}"]`);
+        if (!element.value.trim()) {
+            element.classList.add('error');
+            isValid = false;
+        } else {
+            element.classList.remove('error');
+        }
+    });
+    
+    // Additional validation
+    const quantity = document.getElementById('quantity');
+    const cost = document.getElementById('cost');
+    
+    if (quantity.value <= 0) {
+        quantity.classList.add('error');
+        isValid = false;
+    }
+    
+    if (cost.value <= 0) {
+        cost.classList.add('error');
+        isValid = false;
+    }
+    
+    if (!isValid) {
+        showError('Please fill all required fields with valid values');
+    }
+    
+    return isValid;
+}
+
+function showError(message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.textContent = message;
+    
+    const existingError = document.querySelector('.error-message');
+    if (existingError) existingError.remove();
+    
+    document.querySelector('.form-actions').prepend(errorDiv);
+}
+    </script>
 </body>
 </html>
