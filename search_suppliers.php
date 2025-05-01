@@ -5,7 +5,7 @@ session_start();
 $user_Id = $_SESSION['User_Id'] ?? null;
 
 if ($user_Id === null) {
-    die("User ID not found in the session.");
+    die(json_encode(['error' => 'User ID not found in session']));
 }
 
 // Database connection
@@ -17,25 +17,28 @@ $dbname = "inventory_management_system";
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die(json_encode(['error' => "Connection failed: " . $conn->connect_error]));
 }
 
 // Fetch and sanitize query
 $query = isset($_GET['query']) ? $conn->real_escape_string($_GET['query']) : '';
 
-// Search suppliers
-$sql = "
-  SELECT Supplier_Name FROM suppliers
-  WHERE Supplier_Name LIKE '%{$query}%'
-  LIMIT 10
-";
+// Search suppliers with contact info
+$sql = "SELECT Supplier_Id, Supplier_Name, Contact_Info 
+        FROM Suppliers 
+        WHERE Supplier_Name LIKE '%{$query}%'
+        LIMIT 10";
 
 $res = $conn->query($sql);
 
 $suppliers = [];
 if ($res) {
     while ($row = $res->fetch_assoc()) {
-        $suppliers[] = $row;
+        $suppliers[] = [
+            'Supplier_Id' => $row['Supplier_Id'],
+            'Supplier_Name' => $row['Supplier_Name'],
+            'Contact_Info' => $row['Contact_Info']
+        ];
     }
 }
 
